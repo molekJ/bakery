@@ -2,6 +2,8 @@ import { ProgressBar } from "./Components/ProgressBar";
 import { useState, useEffect } from "react";
 import { DisplayAmount } from "./Components/DisplayAmount";
 import { DoughShelf } from "./Components/DoughShelf";
+import { Oven } from "./Components/Oven";
+import { GlobalStyle } from "./GlobalStyles";
 
 function App() {
   const [flourAmount, setFlourAmount] = useState<number>(40);
@@ -9,6 +11,8 @@ function App() {
   const [isMakingDought, setisMakingDought] = useState<boolean>(false);
   const [doughtAmount, setDoughtAmount] = useState<number>(0);
   const [doughtArray, setDoughtArray] = useState<number[]>([]);
+  const [rowCookie, setRowCookie] = useState<number>(0);
+  const [cookiesInOven, setCookiesInOven] = useState<number>(0);
 
   useEffect(() => {
     if (flourAmount < 10) {
@@ -21,6 +25,7 @@ function App() {
         setDoughtAmount(doughtAmount + 1);
         setFlourAmount(flourAmount - 10);
         setDoughtArray((doughtArray) => [...doughtArray, 1]);
+        console.log(doughtArray.length);
         return;
       }
       setTimeout(() => {
@@ -31,6 +36,7 @@ function App() {
 
   return (
     <div className="App">
+      <GlobalStyle />
       <h1>BACERY</h1>
       <ProgressBar progressValue={progresDought} />
       <DisplayAmount
@@ -52,9 +58,35 @@ function App() {
         type={"szt"}
       />
 
-      {doughtArray.map((e) => {
-        return <DoughShelf />;
+      <DisplayAmount
+        amount={rowCookie}
+        nameAmount={"Ilość surowych ciasteczek:"}
+        type={"szt"}
+      />
+      {doughtArray.map((e, index, array) => {
+        console.log("To jest e:", e);
+        console.log("To jest index:", index);
+        console.log("To jest array:", array);
+        return (
+          <>
+            <DoughShelf setState={setRowCookie} state={rowCookie} />
+          </>
+        );
       })}
+
+      <button
+        onClick={() => {
+          setCookiesInOven(cookiesInOven + 1);
+        }}
+      >
+        Włóż ciastko do pieca
+      </button>
+      <DisplayAmount
+        amount={cookiesInOven}
+        nameAmount={"ilosc ciastek w piekarniku"}
+        type={"szt"}
+      />
+      <Oven></Oven>
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { NamedTupleMember } from "typescript";
 
 const Ball = styled.div`
   background: yellow;
@@ -8,18 +7,24 @@ const Ball = styled.div`
 `;
 
 interface Props {
-  arrayDough: number[];
+  setState: React.Dispatch<React.SetStateAction<any>>;
+  state: number;
 }
 
-export const DoughShelf: React.FC = () => {
+export const DoughShelf: React.FC<Props> = ({ setState, state }) => {
   const [size, setSize] = useState(100);
   return (
     <div>
       <Ball
         onClick={(e) => {
           setSize(size - 10);
+          setState(state + 1);
         }}
-        style={{ width: size, height: size }}
+        style={{
+          width: size,
+          height: size,
+          background: size > 60 ? "green" : "red",
+        }}
       ></Ball>
     </div>
   );
