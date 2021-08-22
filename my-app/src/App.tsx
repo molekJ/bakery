@@ -25,7 +25,7 @@ function App() {
         setDoughtAmount(doughtAmount + 1);
         setFlourAmount(flourAmount - 10);
         setDoughtArray((doughtArray) => [...doughtArray, 1]);
-        console.log(doughtArray.length);
+
         return;
       }
       setTimeout(() => {
@@ -57,19 +57,22 @@ function App() {
         nameAmount={"liczba ulepionych kul"}
         type={"szt"}
       />
-
       <DisplayAmount
         amount={rowCookie}
         nameAmount={"Ilość surowych ciasteczek:"}
         type={"szt"}
       />
       {doughtArray.map((e, index, array) => {
-        console.log("To jest e:", e);
-        console.log("To jest index:", index);
-        console.log("To jest array:", array);
         return (
           <>
-            <DoughShelf setState={setRowCookie} state={rowCookie} />
+            <DoughShelf
+              key={index}
+              setState={setRowCookie}
+              rowCookie={rowCookie}
+              setDoughtArray={setDoughtArray}
+              doughtArray={doughtArray}
+              index={index}
+            />
           </>
         );
       })}
