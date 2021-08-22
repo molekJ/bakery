@@ -4,34 +4,56 @@ import { DisplayAmount } from "./Components/DisplayAmount";
 import { DoughShelf } from "./Components/DoughShelf";
 import { Oven } from "./Components/Oven";
 import { GlobalStyle } from "./GlobalStyles";
+import { Dough } from "./Components/Dought";
 
 function App() {
   const [flourAmount, setFlourAmount] = useState<number>(40);
   const [progresDought, setProgresDought] = useState<number>(0);
   const [isMakingDought, setisMakingDought] = useState<boolean>(false);
   const [doughtAmount, setDoughtAmount] = useState<number>(0);
-  const [doughtArray, setDoughtArray] = useState<number[]>([]);
+  const [doughtArray, setDoughtArray] = useState<Dough[]>([]);
   const [rowCookie, setRowCookie] = useState<number>(0);
   const [cookiesInOven, setCookiesInOven] = useState<number>(0);
+
+  const makeCookie = (doughId: number) => {
+    setDoughtArray((old) =>
+      old
+        .map((dough) =>
+          dough.id !== doughId ? dough : { ...dough, size: dough.size - 10 }
+        )
+        .filter((dough) => dough.size > 0)
+    );
+    setRowCookie((old) => old + 1);
+  };
 
   useEffect(() => {
     if (flourAmount < 10) {
       setisMakingDought(false);
       return;
     }
+    let timeoutId = 0;
     if (isMakingDought) {
       if (progresDought === 100) {
         setProgresDought(0);
-        setDoughtAmount(doughtAmount + 1);
-        setFlourAmount(flourAmount - 10);
-        setDoughtArray((doughtArray) => [...doughtArray, 1]);
+        setDoughtAmount((doughtAmount) => doughtAmount + 1);
+        setFlourAmount((flourAmount) => flourAmount - 10);
+        setDoughtArray((doughtArray) => [
+          ...doughtArray,
+          { id: Date.now(), size: 100 },
+        ]);
 
         return;
       }
-      setTimeout(() => {
+      timeoutId = window.setTimeout(() => {
         return setProgresDought(progresDought + 1);
       }, 10);
     }
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, [progresDought, isMakingDought]);
 
   return (
@@ -62,18 +84,13 @@ function App() {
         nameAmount={"Ilość surowych ciasteczek:"}
         type={"szt"}
       />
-      {doughtArray.map((e, index, array) => {
+      {doughtArray.map((element) => {
         return (
-          <>
-            <DoughShelf
-              key={index}
-              setState={setRowCookie}
-              rowCookie={rowCookie}
-              setDoughtArray={setDoughtArray}
-              doughtArray={doughtArray}
-              index={index}
-            />
-          </>
+          <DoughShelf
+            key={element.id}
+            size={element.size}
+            onDoughClick={() => makeCookie(element.id)}
+          />
         );
       })}
 
