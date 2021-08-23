@@ -5,6 +5,7 @@ import { DoughShelf } from "./Components/DoughShelf";
 import { Oven } from "./Components/Oven";
 import { GlobalStyle } from "./GlobalStyles";
 import { Dough } from "./Components/Dought";
+import { Cookie } from "./Components/Cookie";
 
 function App() {
   const [flourAmount, setFlourAmount] = useState<number>(40);
@@ -12,8 +13,9 @@ function App() {
   const [isMakingDought, setisMakingDought] = useState<boolean>(false);
   const [doughtAmount, setDoughtAmount] = useState<number>(0);
   const [doughtArray, setDoughtArray] = useState<Dough[]>([]);
-  const [rowCookie, setRowCookie] = useState<number>(0);
+  const [rawCookie, setRawCookie] = useState<number>(0);
   const [cookiesInOven, setCookiesInOven] = useState<number>(0);
+  const [cookiesInOvenArray, setCookiesInOvenArray] = useState<Cookie[]>([]);
 
   const makeCookie = (doughId: number) => {
     setDoughtArray((old) =>
@@ -23,7 +25,17 @@ function App() {
         )
         .filter((dough) => dough.size > 0)
     );
-    setRowCookie((old) => old + 1);
+    setRawCookie((old) => old + 1);
+  };
+
+  const cookiesBakingStart = () => {
+    setCookiesInOven((cookiesInOven) => cookiesInOven + 1);
+    setRawCookie((rawCookie) => rawCookie - 1);
+
+    setCookiesInOvenArray((cookiesInOvenArray) => [
+      ...cookiesInOvenArray,
+      { id: Date.now(), date: 2 },
+    ]);
   };
 
   useEffect(() => {
@@ -80,7 +92,7 @@ function App() {
         type={"szt"}
       />
       <DisplayAmount
-        amount={rowCookie}
+        amount={rawCookie}
         nameAmount={"Ilość surowych ciasteczek:"}
         type={"szt"}
       />
@@ -95,8 +107,11 @@ function App() {
       })}
 
       <button
+        disabled={
+          rawCookie < 1 ? true : false || cookiesInOven === 9 ? true : false
+        }
         onClick={() => {
-          setCookiesInOven(cookiesInOven + 1);
+          cookiesBakingStart();
         }}
       >
         Włóż ciastko do pieca
@@ -106,7 +121,7 @@ function App() {
         nameAmount={"ilosc ciastek w piekarniku"}
         type={"szt"}
       />
-      <Oven></Oven>
+      <Oven cookiesInOvenArray={cookiesInOvenArray}></Oven>
     </div>
   );
 }

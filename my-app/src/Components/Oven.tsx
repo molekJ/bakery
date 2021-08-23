@@ -23,18 +23,16 @@ const CakePlace = styled.div`
   cursor: pointer;
 `;
 
-export const Oven = () => {
+interface Props {
+  cookiesInOvenArray: { id: number }[];
+}
+
+export const Oven: React.FC<Props> = ({ cookiesInOvenArray }) => {
   return (
     <Container>
-      <CakePlace></CakePlace>
-      <CakePlace></CakePlace>
-      <CakePlace></CakePlace>
-      <CakePlace></CakePlace>
-      <CakePlace></CakePlace>
-      <CakePlace></CakePlace>
-      <CakePlace></CakePlace>
-      <CakePlace></CakePlace>
-      <CakePlace></CakePlace>
+      {cookiesInOvenArray.map((element) => {
+        return <CakePlace key={element.id} />;
+      })}
     </Container>
   );
 };

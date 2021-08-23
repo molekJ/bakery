@@ -1,4 +1,4 @@
-diff --git a/my-app/src/App.tsx b/my-app/src/App.tsx
+git diff --git a/my-app/src/App.tsx b/my-app/src/App.tsx
 index d96bc27..083951c 100644
 --- a/my-app/src/App.tsx
 +++ b/my-app/src/App.tsx
