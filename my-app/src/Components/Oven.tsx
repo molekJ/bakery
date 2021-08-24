@@ -24,14 +24,21 @@ const CakePlace = styled.div`
 `;
 
 interface Props {
-  cookiesInOvenArray: { id: number }[];
+  cookiesInOvenArray: { id: number; color: string }[];
 }
 
 export const Oven: React.FC<Props> = ({ cookiesInOvenArray }) => {
   return (
     <Container>
       {cookiesInOvenArray.map((element) => {
-        return <CakePlace key={element.id} />;
+        return (
+          <CakePlace
+            key={element.id}
+            style={{
+              background: (element.color = "yellow" ? "yellow" : "white"),
+            }}
+          />
+        );
       })}
     </Container>
   );

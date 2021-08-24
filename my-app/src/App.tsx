@@ -34,7 +34,7 @@ function App() {
 
     setCookiesInOvenArray((cookiesInOvenArray) => [
       ...cookiesInOvenArray,
-      { id: Date.now(), date: 2 },
+      { id: Date.now(), color: "yellow" },
     ]);
   };
 
@@ -67,6 +67,16 @@ function App() {
       }
     };
   }, [progresDought, isMakingDought]);
+
+  const checkCookieTime = () => {
+    const date = Date.now();
+
+    return setCookiesInOvenArray((old) =>
+      old.map((cookie) =>
+        date - cookie.id > 5000 ? { ...cookie, color: "orange" } : cookie
+      )
+    );
+  };
 
   return (
     <div className="App">
@@ -122,6 +132,14 @@ function App() {
         type={"szt"}
       />
       <Oven cookiesInOvenArray={cookiesInOvenArray}></Oven>
+      <button
+        onClick={() => {
+          checkCookieTime();
+          console.log(cookiesInOvenArray);
+        }}
+      >
+        Sprawdz czas
+      </button>
     </div>
   );
 }
