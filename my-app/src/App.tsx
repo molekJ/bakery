@@ -14,7 +14,6 @@ function App() {
   const [doughtAmount, setDoughtAmount] = useState<number>(0);
   const [doughtArray, setDoughtArray] = useState<Dough[]>([]);
   const [rawCookie, setRawCookie] = useState<number>(0);
-  const [cookiesInOven, setCookiesInOven] = useState<number>(0);
   const [cookiesInOvenArray, setCookiesInOvenArray] = useState<Cookie[]>([]);
 
   const makeCookie = (doughId: number) => {
@@ -29,7 +28,6 @@ function App() {
   };
 
   const cookiesBakingStart = () => {
-    setCookiesInOven((cookiesInOven) => cookiesInOven + 1);
     setRawCookie((rawCookie) => rawCookie - 1);
 
     setCookiesInOvenArray((cookiesInOvenArray) => [
@@ -71,11 +69,28 @@ function App() {
   const checkCookieTime = () => {
     const date = Date.now();
 
-    return setCookiesInOvenArray((old) =>
+    setCookiesInOvenArray((old) =>
       old.map((cookie) =>
-        date - cookie.id > 5000 ? { ...cookie, color: "orange" } : cookie
+        date - cookie.id > 3000 ? { ...cookie, color: "orange" } : cookie
       )
     );
+    setCookiesInOvenArray((old) =>
+      old.map((cookie) =>
+        date - cookie.id > 6000 ? { ...cookie, color: "brown" } : cookie
+      )
+    );
+    setCookiesInOvenArray((old) =>
+      old.map((cookie) =>
+        date - cookie.id > 9000 ? { ...cookie, color: "black" } : cookie
+      )
+    );
+    setCookiesInOvenArray((old) =>
+      old.filter((cookie) => date - cookie.id < 12000)
+    );
+
+    setTimeout(() => {
+      checkCookieTime();
+    }, 1000);
   };
 
   return (
@@ -118,7 +133,11 @@ function App() {
 
       <button
         disabled={
-          rawCookie < 1 ? true : false || cookiesInOven === 9 ? true : false
+          rawCookie < 1
+            ? true
+            : false || cookiesInOvenArray.length === 9
+            ? true
+            : false
         }
         onClick={() => {
           cookiesBakingStart();
@@ -127,15 +146,14 @@ function App() {
         Włóż ciastko do pieca
       </button>
       <DisplayAmount
-        amount={cookiesInOven}
-        nameAmount={"ilosc ciastek w piekarniku"}
+        amount={cookiesInOvenArray.length}
+        nameAmount={"ilosc ciastek w piekarniku TABLCA"}
         type={"szt"}
       />
       <Oven cookiesInOvenArray={cookiesInOvenArray}></Oven>
       <button
         onClick={() => {
           checkCookieTime();
-          console.log(cookiesInOvenArray);
         }}
       >
         Sprawdz czas

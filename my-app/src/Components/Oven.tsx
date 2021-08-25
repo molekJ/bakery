@@ -35,7 +35,7 @@ export const Oven: React.FC<Props> = ({ cookiesInOvenArray }) => {
           <CakePlace
             key={element.id}
             style={{
-              background: (element.color = "yellow" ? "yellow" : "white"),
+              background: element.color,
             }}
           />
         );

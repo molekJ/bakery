@@ -1,4 +1,4 @@
 export type Cookie = {
   id: number;
-  color: "yellow" | "orange";
+  color: "yellow" | "orange" | "brown" | "black";
 };
