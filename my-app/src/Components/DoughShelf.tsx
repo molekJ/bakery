@@ -4,6 +4,7 @@ import styled from "styled-components";
 const Ball = styled.div`
   background: yellow;
   border-radius: 50%;
+  cursor: pointer;
 `;
 
 interface Props {

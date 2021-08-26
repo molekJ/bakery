@@ -15,6 +15,8 @@ function App() {
   const [doughtArray, setDoughtArray] = useState<Dough[]>([]);
   const [rawCookie, setRawCookie] = useState<number>(0);
   const [cookiesInOvenArray, setCookiesInOvenArray] = useState<Cookie[]>([]);
+  const [cookiesReadyToSell, setCookiesReadyToSell] = useState<number>(0);
+  const [ourMoney, setOurMoney] = useState<number>(0);
 
   const makeCookie = (doughId: number) => {
     setDoughtArray((old) =>
@@ -32,7 +34,7 @@ function App() {
 
     setCookiesInOvenArray((cookiesInOvenArray) => [
       ...cookiesInOvenArray,
-      { id: Date.now(), color: "yellow" },
+      { id: Date.now(), color: "yellow", place: "oven" },
     ]);
   };
 
@@ -66,8 +68,9 @@ function App() {
     };
   }, [progresDought, isMakingDought]);
 
-  const checkCookieTime = () => {
+  useEffect(() => {
     const date = Date.now();
+    if (cookiesInOvenArray.length === 0) return;
 
     setCookiesInOvenArray((old) =>
       old.map((cookie) =>
@@ -87,16 +90,50 @@ function App() {
     setCookiesInOvenArray((old) =>
       old.filter((cookie) => date - cookie.id < 12000)
     );
+  }, [cookiesInOvenArray]);
 
-    setTimeout(() => {
-      checkCookieTime();
-    }, 1000);
+  const randomSecound = () => {
+    let number = Math.floor(Math.random() * 4 + 3);
+    return number;
   };
+
+  const randomAmount = () => {
+    let number = Math.floor(Math.random() * 10 + 1);
+    return number;
+  };
+
+  // const sellCookies = () => {
+  //   let secounds = randomSecound();
+  //   let amount = randomAmount();
+  //   setInterval(sellCookies, secounds);
+  //   if (cookiesReadyToSell === 0) {
+  //     return;
+  //   }
+
+  //   if (amount >= cookiesReadyToSell) {
+  //     amount = cookiesReadyToSell;
+  //     setCookiesReadyToSell(0);
+  //     if (amount > 5) {
+  //       setOurMoney((ourMoney) => ourMoney + amount * 4);
+  //     } else {
+  //       setOurMoney((ourMoney) => ourMoney + amount * 5);
+  //     }
+  //     return;
+  //   } else {
+  //     setCookiesReadyToSell(cookiesReadyToSell - amount);
+  //     if (amount > 5) {
+  //       setOurMoney((ourMoney) => ourMoney + amount * 4);
+  //     } else {
+  //       setOurMoney((ourMoney) => ourMoney + amount * 5);
+  //     }
+  //     return;
+  //   }
+  // };
 
   return (
     <div className="App">
       <GlobalStyle />
-      <h1>BACERY</h1>
+      <h1>BAKERY</h1>
       <ProgressBar progressValue={progresDought} />
       <DisplayAmount
         amount={flourAmount}
@@ -147,17 +184,21 @@ function App() {
       </button>
       <DisplayAmount
         amount={cookiesInOvenArray.length}
-        nameAmount={"ilosc ciastek w piekarniku TABLCA"}
+        nameAmount={"ilosc ciastek w piekarniku"}
         type={"szt"}
       />
-      <Oven cookiesInOvenArray={cookiesInOvenArray}></Oven>
-      <button
-        onClick={() => {
-          checkCookieTime();
-        }}
-      >
-        Sprawdz czas
-      </button>
+      <Oven
+        cookiesInOvenArray={cookiesInOvenArray}
+        setCookiesReadyToSell={setCookiesReadyToSell}
+        cookiesReadyToSell={cookiesReadyToSell}
+        setCookiesInOvenArray={setCookiesInOvenArray}
+      ></Oven>
+      <DisplayAmount
+        amount={cookiesReadyToSell}
+        nameAmount={"ilosc ciastek gotowych"}
+        type={"szt"}
+      />
+      <DisplayAmount amount={ourMoney} nameAmount={"Nasz budżet"} type={"$"} />
     </div>
   );
 }

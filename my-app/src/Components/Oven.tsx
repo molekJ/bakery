@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-
+import { Cookie } from "./Cookie";
 const Container = styled.div`
   width: 150px;
   height: 150px;
@@ -24,15 +24,40 @@ const CakePlace = styled.div`
 `;
 
 interface Props {
-  cookiesInOvenArray: { id: number; color: string }[];
+  cookiesInOvenArray: { id: number; color: string; place: string }[];
+  setCookiesReadyToSell: React.Dispatch<React.SetStateAction<number>>;
+  cookiesReadyToSell: number;
+  setCookiesInOvenArray: React.Dispatch<React.SetStateAction<Cookie[]>>;
 }
 
-export const Oven: React.FC<Props> = ({ cookiesInOvenArray }) => {
+export const Oven: React.FC<Props> = ({
+  cookiesInOvenArray,
+  setCookiesReadyToSell,
+  cookiesReadyToSell,
+  setCookiesInOvenArray,
+}) => {
+  const pullOutCookie = (color: string, ID: number) => {
+    setCookiesInOvenArray((old) =>
+      old.map((cookie) =>
+        cookie.id !== ID ? cookie : { ...cookie, place: "fridge" }
+      )
+    );
+    setCookiesInOvenArray((old) =>
+      old.filter((cookie) => cookie.place === "oven")
+    );
+
+    if (color === "brown") {
+      setCookiesReadyToSell((cookiesReadyToSell) => cookiesReadyToSell + 1);
+    }
+  };
   return (
     <Container>
       {cookiesInOvenArray.map((element) => {
         return (
           <CakePlace
+            onClick={() => {
+              pullOutCookie(element.color, element.id);
+            }}
             key={element.id}
             style={{
               background: element.color,
