@@ -17,6 +17,7 @@ function App() {
   const [cookiesInOvenArray, setCookiesInOvenArray] = useState<Cookie[]>([]);
   const [cookiesReadyToSell, setCookiesReadyToSell] = useState<number>(0);
   const [ourMoney, setOurMoney] = useState<number>(0);
+  const [sell, setSell] = useState(false);
 
   const makeCookie = (doughId: number) => {
     setDoughtArray((old) =>
@@ -90,45 +91,64 @@ function App() {
     setCookiesInOvenArray((old) =>
       old.filter((cookie) => date - cookie.id < 12000)
     );
-  }, [cookiesInOvenArray]);
-
-  const randomSecound = () => {
-    let number = Math.floor(Math.random() * 4 + 3);
-    return number;
-  };
+  });
 
   const randomAmount = () => {
     let number = Math.floor(Math.random() * 10 + 1);
     return number;
   };
 
-  // const sellCookies = () => {
-  //   let secounds = randomSecound();
-  //   let amount = randomAmount();
-  //   setInterval(sellCookies, secounds);
-  //   if (cookiesReadyToSell === 0) {
-  //     return;
-  //   }
+  const sellCookies = () => {
+    let amount = randomAmount();
+    if (cookiesReadyToSell === 0) {
+      return;
+    }
+    if (amount >= cookiesReadyToSell) {
+      amount = cookiesReadyToSell;
+      setCookiesReadyToSell(0);
+      if (amount > 5) {
+        setOurMoney((ourMoney) => ourMoney + amount * 4);
+      } else {
+        setOurMoney((ourMoney) => ourMoney + amount * 5);
+      }
+      return;
+    } else {
+      setCookiesReadyToSell(cookiesReadyToSell - amount);
+      if (amount > 5) {
+        setOurMoney((ourMoney) => ourMoney + amount * 4);
+      } else {
+        setOurMoney((ourMoney) => ourMoney + amount * 5);
+      }
+      return;
+    }
+  };
 
-  //   if (amount >= cookiesReadyToSell) {
-  //     amount = cookiesReadyToSell;
-  //     setCookiesReadyToSell(0);
-  //     if (amount > 5) {
-  //       setOurMoney((ourMoney) => ourMoney + amount * 4);
-  //     } else {
-  //       setOurMoney((ourMoney) => ourMoney + amount * 5);
-  //     }
-  //     return;
-  //   } else {
-  //     setCookiesReadyToSell(cookiesReadyToSell - amount);
-  //     if (amount > 5) {
-  //       setOurMoney((ourMoney) => ourMoney + amount * 4);
-  //     } else {
-  //       setOurMoney((ourMoney) => ourMoney + amount * 5);
-  //     }
-  //     return;
-  //   }
-  // };
+  const randomSecound = () => {
+    let number = Math.floor(Math.random() * 4 + 3);
+    return number;
+  };
+
+  useEffect(() => {
+    if (sell) {
+      return;
+    } else {
+      const secounds = randomSecound();
+      const timeoutId = window.setTimeout(() => {
+        console.log("srzedaje");
+        console.log(secounds);
+        setSell(true);
+        sellCookies();
+      }, secounds * 1000);
+      window.setTimeout(() => {
+        setSell(false);
+      }, secounds * 1000);
+      return () => {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+      };
+    }
+  });
 
   return (
     <div className="App">
