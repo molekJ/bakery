@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 
 interface Props {
   nameAmount: string;
@@ -6,17 +7,24 @@ interface Props {
   type?: "kg" | "szt" | "$";
 }
 
+const Container = styled.div`
+  padding: 10px 10px;
+  border-radius: 5px;
+  font-weight: 600;
+  letter-spacing: 1px;
+`;
+
 export const DisplayAmount: React.FC<Props> = ({
   nameAmount,
   amount,
   type,
 }) => {
   return (
-    <div>
+    <Container>
       <p>
         {nameAmount} : {amount}
         {type && type}
       </p>
-    </div>
+    </Container>
   );
 };

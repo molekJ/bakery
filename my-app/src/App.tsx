@@ -6,18 +6,72 @@ import { Oven } from "./Components/Oven";
 import { GlobalStyle } from "./GlobalStyles";
 import { Dough } from "./Components/Dought";
 import { Cookie } from "./Components/Cookie";
+import styled from "styled-components";
+import { Popup } from "./Components/Popup";
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+  background: var(--yellow-transparent);
+
+  border-radius: 20px;
+`;
+
+const HeaderContainer = styled.div`
+  height: 100px;
+
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+const LeftContainer = styled.div`
+  width: 240px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const CenterContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const RightContainer = styled.div`
+width`;
+
+const MainContainer = styled.div`
+  display: flex;
+  width: 100%;
+  overflow: auto;
+  height: calc(100vh - 140px);
+  justify-content: center;
+`;
+
+const InfoContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: calc(100vw - 40px);
+`;
 function App() {
-  const [flourAmount, setFlourAmount] = useState<number>(40);
+  const [flourAmount, setFlourAmount] = useState<number>(400);
   const [progresDought, setProgresDought] = useState<number>(0);
   const [isMakingDought, setisMakingDought] = useState<boolean>(false);
-  const [doughtAmount, setDoughtAmount] = useState<number>(0);
   const [doughtArray, setDoughtArray] = useState<Dough[]>([]);
   const [rawCookie, setRawCookie] = useState<number>(0);
   const [cookiesInOvenArray, setCookiesInOvenArray] = useState<Cookie[]>([]);
   const [cookiesReadyToSell, setCookiesReadyToSell] = useState<number>(0);
   const [ourMoney, setOurMoney] = useState<number>(0);
   const [sell, setSell] = useState(false);
+  const [freeSpaceInOven, setFreeSpaceInOven] = useState(9);
+  const [popUp, setPopUp] = useState(false);
 
   const makeCookie = (doughId: number) => {
     setDoughtArray((old) =>
@@ -40,15 +94,15 @@ function App() {
   };
 
   useEffect(() => {
-    if (flourAmount < 10) {
+    if (flourAmount < 10 || doughtArray.length === 5) {
       setisMakingDought(false);
       return;
     }
+
     let timeoutId = 0;
     if (isMakingDought) {
       if (progresDought === 100) {
         setProgresDought(0);
-        setDoughtAmount((doughtAmount) => doughtAmount + 1);
         setFlourAmount((flourAmount) => flourAmount - 10);
         setDoughtArray((doughtArray) => [
           ...doughtArray,
@@ -71,7 +125,10 @@ function App() {
 
   useEffect(() => {
     const date = Date.now();
-    if (cookiesInOvenArray.length === 0) return;
+    if (cookiesInOvenArray.length === 0) {
+      setFreeSpaceInOven(9);
+      return;
+    }
 
     setCookiesInOvenArray((old) =>
       old.map((cookie) =>
@@ -91,6 +148,8 @@ function App() {
     setCookiesInOvenArray((old) =>
       old.filter((cookie) => date - cookie.id < 12000)
     );
+
+    setFreeSpaceInOven(9 - cookiesInOvenArray.length);
   });
 
   const randomAmount = () => {
@@ -134,8 +193,6 @@ function App() {
     } else {
       const secounds = randomSecound();
       const timeoutId = window.setTimeout(() => {
-        console.log("srzedaje");
-        console.log(secounds);
         setSell(true);
         sellCookies();
       }, secounds * 1000);
@@ -150,76 +207,149 @@ function App() {
     }
   });
 
-  return (
-    <div className="App">
-      <GlobalStyle />
-      <h1>BAKERY</h1>
-      <ProgressBar progressValue={progresDought} />
-      <DisplayAmount
-        amount={flourAmount}
-        nameAmount={"Ilość dostępnej mąki:"}
-        type={"kg"}
-      />
-      <button
-        disabled={flourAmount < 10 ? true : false}
-        onClick={() => {
-          setisMakingDought(!isMakingDought);
-        }}
-      >
-        {isMakingDought ? "Zatrzymaj lepienie" : "Ulep ciasto"}
-      </button>
-      <DisplayAmount
-        amount={doughtAmount}
-        nameAmount={"liczba ulepionych kul"}
-        type={"szt"}
-      />
-      <DisplayAmount
-        amount={rawCookie}
-        nameAmount={"Ilość surowych ciasteczek:"}
-        type={"szt"}
-      />
-      {doughtArray.map((element) => {
-        return (
-          <DoughShelf
-            key={element.id}
-            size={element.size}
-            onDoughClick={() => makeCookie(element.id)}
-          />
-        );
-      })}
+  const refillOvenWithCookies = () => {
+    // if (rawCookie <= freeSpaceInOven) {
+    //   let b = rawCookie;
+    //   for (let i = 0; i < b; i++) {
+    //     cookiesBakingStart();
+    //   }
+    //   return;
+    // }
+    // if (rawCookie > freeSpaceInOven) {
+    //   let c = freeSpaceInOven;
+    //   for (let i = 0; i < c; i++) {
+    //     cookiesBakingStart();
+    //   }
+    //   return;
+    // }
+  };
 
-      <button
-        disabled={
-          rawCookie < 1
-            ? true
-            : false || cookiesInOvenArray.length === 9
-            ? true
-            : false
-        }
-        onClick={() => {
-          cookiesBakingStart();
-        }}
-      >
-        Włóż ciastko do pieca
-      </button>
-      <DisplayAmount
-        amount={cookiesInOvenArray.length}
-        nameAmount={"ilosc ciastek w piekarniku"}
-        type={"szt"}
-      />
-      <Oven
-        cookiesInOvenArray={cookiesInOvenArray}
-        setCookiesReadyToSell={setCookiesReadyToSell}
-        cookiesReadyToSell={cookiesReadyToSell}
-        setCookiesInOvenArray={setCookiesInOvenArray}
-      ></Oven>
-      <DisplayAmount
-        amount={cookiesReadyToSell}
-        nameAmount={"ilosc ciastek gotowych"}
-        type={"szt"}
-      />
-      <DisplayAmount amount={ourMoney} nameAmount={"Nasz budżet"} type={"$"} />
-    </div>
+  return (
+    <>
+      <Popup popUp={popUp} setPopUp={setPopUp} />
+
+      <Container style={{ opacity: popUp ? 1 : 0.2 }}>
+        <GlobalStyle />
+        <HeaderContainer>
+          <h1>BAKERY</h1>
+          <InfoContainer>
+            <DisplayAmount
+              amount={flourAmount}
+              nameAmount={"Mąka"}
+              type={"kg"}
+            />
+            <DisplayAmount
+              amount={doughtArray.length}
+              nameAmount={"Kule ciasta"}
+              type={"szt"}
+            />
+
+            <DisplayAmount
+              amount={rawCookie}
+              nameAmount={"Surowe ciasteczka:"}
+              type={"szt"}
+            />
+            <DisplayAmount
+              amount={ourMoney}
+              nameAmount={"Nasz budżet"}
+              type={"$"}
+            />
+            <DisplayAmount
+              amount={cookiesInOvenArray.length}
+              nameAmount={"Ciastka w piekarniku"}
+              type={"szt"}
+            />
+            <DisplayAmount
+              amount={cookiesReadyToSell}
+              nameAmount={"Ciastka na sprzedaż"}
+              type={"szt"}
+            />
+            <DisplayAmount
+              amount={freeSpaceInOven}
+              nameAmount={"Wolne miejsce w piekarniku"}
+              type={"szt"}
+            />
+          </InfoContainer>
+        </HeaderContainer>
+
+        <MainContainer>
+          <LeftContainer>
+            {" "}
+            <button
+              disabled={
+                flourAmount < 10
+                  ? true
+                  : false || doughtArray.length === 5
+                  ? true
+                  : false
+              }
+              onClick={() => {
+                setisMakingDought(!isMakingDought);
+              }}
+            >
+              {isMakingDought ? "Zatrzymaj lepienie" : "Ulep ciasto"}
+            </button>
+            <ProgressBar progressValue={progresDought} />
+            {doughtArray.map((element) => {
+              return (
+                <DoughShelf
+                  key={element.id}
+                  size={element.size}
+                  onDoughClick={() => makeCookie(element.id)}
+                />
+              );
+            })}{" "}
+          </LeftContainer>
+          <CenterContainer>
+            <button
+              disabled={
+                rawCookie < 1
+                  ? true
+                  : false || cookiesInOvenArray.length === 9
+                  ? true
+                  : false
+              }
+              onClick={() => {
+                cookiesBakingStart();
+              }}
+            >
+              Włóż ciastko do pieca
+            </button>
+            <button
+              disabled={
+                rawCookie < 1
+                  ? true
+                  : false || cookiesInOvenArray.length === 9
+                  ? true
+                  : false
+              }
+              onClick={() => {
+                refillOvenWithCookies();
+              }}
+            >
+              Zapełnij piec
+            </button>
+
+            <Oven
+              cookiesInOvenArray={cookiesInOvenArray}
+              setCookiesReadyToSell={setCookiesReadyToSell}
+              setCookiesInOvenArray={setCookiesInOvenArray}
+            ></Oven>
+
+            <button
+              disabled={ourMoney < 100 ? true : false}
+              onClick={() => {
+                setFlourAmount((flourAmount) => flourAmount + 100);
+                setOurMoney((ourMoney) => ourMoney - 100);
+              }}
+            >
+              Kup mąkę
+            </button>
+          </CenterContainer>
+          <RightContainer></RightContainer>
+        </MainContainer>
+      </Container>
+    </>
   );
 }
 

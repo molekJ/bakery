@@ -2,9 +2,9 @@ import React from "react";
 import styled from "styled-components";
 
 const Ball = styled.div`
-  background: yellow;
   border-radius: 50%;
   cursor: pointer;
+  margin: 5px;
 `;
 
 interface Props {
@@ -20,7 +20,7 @@ export const DoughShelf: React.FC<Props> = ({ onDoughClick, size }) => {
         style={{
           width: size,
           height: size,
-          background: size > 60 ? "green" : "red",
+          background: size > 30 ? "var(--tinkerbell)" : "var(--basilica)",
         }}
       ></Ball>
     </div>

@@ -2,21 +2,22 @@ import React from "react";
 import styled from "styled-components";
 import { Cookie } from "./Cookie";
 const Container = styled.div`
-  width: 150px;
-  height: 150px;
+  width: 60vh;
+  height: 60vh;
   display: grid;
-  background: #27da21;
+  background: var(--tinkerbell);
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
 `;
 
 const CakePlace = styled.div`
-  height: 30px;
-  width: 45px;
+  height: 50%;
+  width: 80%;
   background: yellow;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  border: 1px orange solid;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
   display: flex;
   justify-self: center;
   align-self: center;
@@ -26,14 +27,12 @@ const CakePlace = styled.div`
 interface Props {
   cookiesInOvenArray: { id: number; color: string; place: string }[];
   setCookiesReadyToSell: React.Dispatch<React.SetStateAction<number>>;
-  cookiesReadyToSell: number;
   setCookiesInOvenArray: React.Dispatch<React.SetStateAction<Cookie[]>>;
 }
 
 export const Oven: React.FC<Props> = ({
   cookiesInOvenArray,
   setCookiesReadyToSell,
-  cookiesReadyToSell,
   setCookiesInOvenArray,
 }) => {
   const pullOutCookie = (color: string, ID: number) => {
