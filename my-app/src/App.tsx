@@ -61,7 +61,7 @@ const InfoContainer = styled.div`
   width: calc(100vw - 40px);
 `;
 function App() {
-  const [flourAmount, setFlourAmount] = useState<number>(400);
+  const [flourAmount, setFlourAmount] = useState<number>(100);
   const [progresDought, setProgresDought] = useState<number>(0);
   const [isMakingDought, setisMakingDought] = useState<boolean>(false);
   const [doughtArray, setDoughtArray] = useState<Dough[]>([]);
@@ -98,7 +98,6 @@ function App() {
       setisMakingDought(false);
       return;
     }
-
     let timeoutId = 0;
     if (isMakingDought) {
       if (progresDought === 100) {
@@ -108,20 +107,18 @@ function App() {
           ...doughtArray,
           { id: Date.now(), size: 100 },
         ]);
-
         return;
       }
       timeoutId = window.setTimeout(() => {
         return setProgresDought(progresDought + 1);
       }, 10);
     }
-
     return () => {
       if (timeoutId) {
         clearTimeout(timeoutId);
       }
     };
-  }, [progresDought, isMakingDought]);
+  }, [progresDought, isMakingDought, doughtArray, flourAmount]);
 
   useEffect(() => {
     const date = Date.now();
@@ -150,7 +147,7 @@ function App() {
     );
 
     setFreeSpaceInOven(9 - cookiesInOvenArray.length);
-  });
+  }, [cookiesInOvenArray]);
 
   const randomAmount = () => {
     let number = Math.floor(Math.random() * 10 + 1);
