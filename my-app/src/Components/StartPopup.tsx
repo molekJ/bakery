@@ -5,7 +5,6 @@ const Container = styled.div`
   width: 1000px;
   height: 500px;
   background: var(--yellow-transparent);
-
   z-index: 999;
   position: absolute;
   margin-left: auto;
@@ -13,16 +12,16 @@ const Container = styled.div`
   left: 0;
   right: 0;
   text-align: center;
-
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 20px;
 `;
 
 const ButtonContainer = styled.div`
   width: 90%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 `;
 
 const TextArea = styled.div`
@@ -32,19 +31,23 @@ const TextArea = styled.div`
 `;
 
 interface Props {
-  setPopUp: React.Dispatch<React.SetStateAction<boolean>>;
-  popUp: boolean;
-  setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
+  setStartPopUp: React.Dispatch<React.SetStateAction<boolean>>;
+  startPopUp: boolean;
+  setIsActiveTimer: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const Popup: React.FC<Props> = ({ setPopUp, popUp, setIsActive }) => {
+export const StartPopup: React.FC<Props> = ({
+  setStartPopUp,
+  startPopUp,
+  setIsActiveTimer,
+}) => {
   return (
-    <Container style={{ display: popUp ? "none" : "blok" }}>
+    <Container style={{ display: startPopUp ? "blok" : "none" }}>
       <ButtonContainer>
         <button
           onClick={() => {
-            setPopUp(!popUp);
-            setIsActive((old) => !old);
+            setStartPopUp(!startPopUp);
+            setIsActiveTimer((old) => !old);
           }}
         >
           ZACZYNAMY
@@ -74,13 +77,13 @@ export const Popup: React.FC<Props> = ({ setPopUp, popUp, setIsActive }) => {
         </p>
         <p>Za zarobione $$$ możemy kupić mąkę</p>
         <p>Gdy już mamy świeżą mąkę to możemy lepić kule ....</p>
-        <p>Miłej zabawy!</p>
         <p>
           Po jednym punkcie dostajemy za: ulepienie kuli ciasta, ulepienie
           ciasteczka, włożenie ciasteczka do piekarnika oraz wyjęcie gotowego
           ciasteczka. Za każdą sprzedaż dostajemy tyle punktów ile zarobiliśmy
           $. Zakup mąki to 10 punktów.{" "}
         </p>
+        <p>Miłej zabawy!</p>
       </TextArea>
     </Container>
   );

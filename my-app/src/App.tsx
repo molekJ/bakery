@@ -7,7 +7,8 @@ import { GlobalStyle } from "./GlobalStyles";
 import { Dough } from "./Components/Dought";
 import { Cookie } from "./Components/Cookie";
 import styled from "styled-components";
-import { Popup } from "./Components/Popup";
+import { StartPopup } from "./Components/StartPopup";
+import { EndPopUp } from "./Components/EndPopUp";
 
 const Container = styled.div`
   display: flex;
@@ -73,24 +74,40 @@ function App() {
   const [ourMoney, setOurMoney] = useState<number>(0);
   const [sell, setSell] = useState<boolean>(false);
   const [freeSpaceInOven, setFreeSpaceInOven] = useState<number>(9);
-  const [popUp, setPopUp] = useState<boolean>(false);
+  const [startPopUp, setStartPopUp] = useState<boolean>(true);
   const [score, setScore] = useState<number>(0);
-  const [secounds, setSecounds] = useState(0);
-  const [isActive, setIsActive] = useState(false);
+  const [secounds, setSecounds] = useState<number>(0);
+  const [isActiveTimer, setIsActiveTimer] = useState<boolean>(false);
+  const [endPopUp, setEndPopUp] = useState<boolean>(false);
 
-  const Timer = () => {
-    useEffect(() => {
-      let myInterval = setInterval(() => {
-        if (!isActive) {
-          return;
-        }
-
-        setSecounds((secounds) => secounds + 1);
-      }, 1000);
-      return () => clearInterval(myInterval);
-    });
+  const ClearAll = () => {
+    setFlourAmount(100);
+    setProgresDought(0);
+    setisMakingDought(false);
+    setDoughtArray([]);
+    setRawCookie(0);
+    setCookiesInOvenArray([]);
+    setCookiesReadyToSell(0);
+    setOurMoney(0);
+    setSell(false);
+    setFreeSpaceInOven(9);
   };
-  Timer();
+
+  const clearScoreAndSecounds = () => {
+    setSecounds(0);
+    setScore(0);
+    setIsActiveTimer(!isActiveTimer);
+  };
+
+  useEffect(() => {
+    let myInterval = setInterval(() => {
+      if (!isActiveTimer) {
+        return;
+      }
+      setSecounds((secounds) => secounds + 1);
+    }, 1000);
+    return () => clearInterval(myInterval);
+  }, [secounds, isActiveTimer]);
 
   const makeCookie = (doughId: number) => {
     setScore((score) => score + 1);
@@ -213,7 +230,7 @@ function App() {
   };
 
   useEffect(() => {
-    if (sell) {
+    if (sell || endPopUp) {
       return;
     } else {
       const secounds = randomSecound();
@@ -230,7 +247,7 @@ function App() {
         }
       };
     }
-  });
+  }, [sell]);
 
   const refillOvenWithCookies = () => {
     // if (rawCookie <= freeSpaceInOven) {
@@ -251,9 +268,21 @@ function App() {
 
   return (
     <>
-      <Popup popUp={popUp} setPopUp={setPopUp} setIsActive={setIsActive} />
+      <StartPopup
+        startPopUp={startPopUp}
+        setStartPopUp={setStartPopUp}
+        setIsActiveTimer={setIsActiveTimer}
+      />
 
-      <Container style={{ opacity: popUp ? 1 : 0.2 }}>
+      <EndPopUp
+        endPopUp={endPopUp}
+        setEndPopUp={setEndPopUp}
+        secounds={secounds}
+        score={score}
+        clearScoreAndSecounds={clearScoreAndSecounds}
+      />
+
+      <Container style={{ display: startPopUp || endPopUp ? "none" : "block" }}>
         <GlobalStyle />
         <HeaderContainer>
           <h1>BAKERY</h1>
@@ -385,7 +414,15 @@ function App() {
               nameAmount={"Czas gry"}
               type={"s"}
             />
-            <button>Zakoncz</button>
+            <button
+              onClick={() => {
+                setEndPopUp((endPopUp) => !endPopUp);
+                setIsActiveTimer(!isActiveTimer);
+                ClearAll();
+              }}
+            >
+              Zakoncz
+            </button>
           </RightContainer>
         </MainContainer>
       </Container>
