@@ -46,7 +46,7 @@ export const EndPopUp: React.FC<Props> = ({
   clearScoreAndSecounds,
 }) => {
   return (
-    <Container style={{ display: endPopUp ? "block" : "none" }}>
+    <Container style={{ display: endPopUp ? "flex" : "none" }}>
       <ButtonContainer>
         <button
           onClick={() => {

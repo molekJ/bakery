@@ -47,7 +47,7 @@ const CenterContainer = styled.div`
 
 const RightContainer = styled.div`
   width: 240px;
-  background: yellow;
+  margin-right: 10px;
 `;
 
 const MainContainer = styled.div`
@@ -403,7 +403,6 @@ function App() {
             </button>
           </CenterContainer>
           <RightContainer>
-            <p>Siemka</p>
             <DisplayAmount
               amount={score}
               nameAmount={"Twój wynik"}
