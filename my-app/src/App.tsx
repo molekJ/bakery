@@ -99,6 +99,20 @@ function App() {
     setIsActiveTimer(!isActiveTimer);
   };
 
+  const sendToLocalStorage = () => {
+    if (localStorage.getItem("score") === null) {
+      localStorage.setItem("score", JSON.stringify(score));
+    } else {
+      const bestValue = localStorage.getItem("score");
+
+      if (bestValue) {
+        if (score > JSON.parse(bestValue)) {
+          localStorage.setItem("score", JSON.stringify(score));
+        }
+      }
+    }
+  };
+
   useEffect(() => {
     let myInterval = setInterval(() => {
       if (!isActiveTimer) {
@@ -247,23 +261,23 @@ function App() {
         }
       };
     }
-  }, [sell]);
+  }, [sell, endPopUp]);
 
   const refillOvenWithCookies = () => {
-    // if (rawCookie <= freeSpaceInOven) {
-    //   let b = rawCookie;
-    //   for (let i = 0; i < b; i++) {
-    //     cookiesBakingStart();
-    //   }
-    //   return;
-    // }
-    // if (rawCookie > freeSpaceInOven) {
-    //   let c = freeSpaceInOven;
-    //   for (let i = 0; i < c; i++) {
-    //     cookiesBakingStart();
-    //   }
-    //   return;
-    // }
+    if (rawCookie <= freeSpaceInOven) {
+      let b = rawCookie;
+      for (let i = 0; i < b; i++) {
+        cookiesBakingStart();
+      }
+      return;
+    }
+    if (rawCookie > freeSpaceInOven) {
+      let c = freeSpaceInOven;
+      for (let i = 0; i < c; i++) {
+        cookiesBakingStart();
+      }
+      return;
+    }
   };
 
   return (
@@ -418,6 +432,7 @@ function App() {
                 setEndPopUp((endPopUp) => !endPopUp);
                 setIsActiveTimer(!isActiveTimer);
                 ClearAll();
+                sendToLocalStorage();
               }}
             >
               Zakoncz

@@ -45,6 +45,8 @@ export const EndPopUp: React.FC<Props> = ({
   score,
   clearScoreAndSecounds,
 }) => {
+  const bestResoult = localStorage.getItem("score");
+
   return (
     <Container style={{ display: endPopUp ? "flex" : "none" }}>
       <ButtonContainer>
@@ -59,13 +61,11 @@ export const EndPopUp: React.FC<Props> = ({
       </ButtonContainer>
       <TextArea>
         <h1>Twój wynik:</h1>
-        <p>
-          Zdobyłeś: {score} punktów w {secounds} sekundy
-        </p>
+        <p>Zdobyłeś: {score} punktów!</p>
+        <p>Grałeś: {secounds} s</p>
 
         <h1>Najlepszy wynik:</h1>
-        <p>...wynik...</p>
-        <p>..czas...</p>
+        <p>{bestResoult}</p>
       </TextArea>
     </Container>
   );
