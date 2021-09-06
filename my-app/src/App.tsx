@@ -45,7 +45,9 @@ const CenterContainer = styled.div`
 `;
 
 const RightContainer = styled.div`
-width`;
+  width: 240px;
+  background: yellow;
+`;
 
 const MainContainer = styled.div`
   display: flex;
@@ -69,11 +71,30 @@ function App() {
   const [cookiesInOvenArray, setCookiesInOvenArray] = useState<Cookie[]>([]);
   const [cookiesReadyToSell, setCookiesReadyToSell] = useState<number>(0);
   const [ourMoney, setOurMoney] = useState<number>(0);
-  const [sell, setSell] = useState(false);
-  const [freeSpaceInOven, setFreeSpaceInOven] = useState(9);
-  const [popUp, setPopUp] = useState(false);
+  const [sell, setSell] = useState<boolean>(false);
+  const [freeSpaceInOven, setFreeSpaceInOven] = useState<number>(9);
+  const [popUp, setPopUp] = useState<boolean>(false);
+  const [score, setScore] = useState<number>(0);
+  const [secounds, setSecounds] = useState(0);
+  const [isActive, setIsActive] = useState(false);
+
+  const Timer = () => {
+    useEffect(() => {
+      let myInterval = setInterval(() => {
+        if (!isActive) {
+          return;
+        }
+
+        setSecounds((secounds) => secounds + 1);
+      }, 1000);
+      return () => clearInterval(myInterval);
+    });
+  };
+  Timer();
 
   const makeCookie = (doughId: number) => {
+    setScore((score) => score + 1);
+
     setDoughtArray((old) =>
       old
         .map((dough) =>
@@ -86,6 +107,7 @@ function App() {
 
   const cookiesBakingStart = () => {
     setRawCookie((rawCookie) => rawCookie - 1);
+    setScore((score) => score + 1);
 
     setCookiesInOvenArray((cookiesInOvenArray) => [
       ...cookiesInOvenArray,
@@ -107,6 +129,8 @@ function App() {
           ...doughtArray,
           { id: Date.now(), size: 100 },
         ]);
+        setScore((score) => score + 1);
+
         return;
       }
       timeoutId = window.setTimeout(() => {
@@ -164,16 +188,20 @@ function App() {
       setCookiesReadyToSell(0);
       if (amount > 5) {
         setOurMoney((ourMoney) => ourMoney + amount * 4);
+        setScore((score) => score + amount * 4);
       } else {
         setOurMoney((ourMoney) => ourMoney + amount * 5);
+        setScore((score) => score + amount * 5);
       }
       return;
     } else {
       setCookiesReadyToSell(cookiesReadyToSell - amount);
       if (amount > 5) {
         setOurMoney((ourMoney) => ourMoney + amount * 4);
+        setScore((score) => score + amount * 4);
       } else {
         setOurMoney((ourMoney) => ourMoney + amount * 5);
+        setScore((score) => score + amount * 5);
       }
       return;
     }
@@ -223,7 +251,7 @@ function App() {
 
   return (
     <>
-      <Popup popUp={popUp} setPopUp={setPopUp} />
+      <Popup popUp={popUp} setPopUp={setPopUp} setIsActive={setIsActive} />
 
       <Container style={{ opacity: popUp ? 1 : 0.2 }}>
         <GlobalStyle />
@@ -331,6 +359,7 @@ function App() {
               cookiesInOvenArray={cookiesInOvenArray}
               setCookiesReadyToSell={setCookiesReadyToSell}
               setCookiesInOvenArray={setCookiesInOvenArray}
+              setScore={setScore}
             ></Oven>
 
             <button
@@ -338,12 +367,26 @@ function App() {
               onClick={() => {
                 setFlourAmount((flourAmount) => flourAmount + 100);
                 setOurMoney((ourMoney) => ourMoney - 100);
+                setScore((score) => score + 10);
               }}
             >
               Kup mąkę
             </button>
           </CenterContainer>
-          <RightContainer></RightContainer>
+          <RightContainer>
+            <p>Siemka</p>
+            <DisplayAmount
+              amount={score}
+              nameAmount={"Twój wynik"}
+              type={"pkt"}
+            />
+            <DisplayAmount
+              amount={secounds}
+              nameAmount={"Czas gry"}
+              type={"s"}
+            />
+            <button>Zakoncz</button>
+          </RightContainer>
         </MainContainer>
       </Container>
     </>

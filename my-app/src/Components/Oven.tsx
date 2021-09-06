@@ -28,12 +28,14 @@ interface Props {
   cookiesInOvenArray: { id: number; color: string; place: string }[];
   setCookiesReadyToSell: React.Dispatch<React.SetStateAction<number>>;
   setCookiesInOvenArray: React.Dispatch<React.SetStateAction<Cookie[]>>;
+  setScore: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const Oven: React.FC<Props> = ({
   cookiesInOvenArray,
   setCookiesReadyToSell,
   setCookiesInOvenArray,
+  setScore,
 }) => {
   const pullOutCookie = (color: string, ID: number) => {
     setCookiesInOvenArray((old) =>
@@ -47,6 +49,7 @@ export const Oven: React.FC<Props> = ({
 
     if (color === "brown") {
       setCookiesReadyToSell((cookiesReadyToSell) => cookiesReadyToSell + 1);
+      setScore((score) => score + 1);
     }
   };
   return (

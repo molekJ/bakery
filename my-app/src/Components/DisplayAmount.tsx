@@ -4,7 +4,7 @@ import styled from "styled-components";
 interface Props {
   nameAmount: string;
   amount: number;
-  type?: "kg" | "szt" | "$";
+  type?: "kg" | "szt" | "$" | "pkt" | "s";
 }
 
 const Container = styled.div`

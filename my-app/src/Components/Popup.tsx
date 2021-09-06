@@ -34,15 +34,21 @@ const TextArea = styled.div`
 interface Props {
   setPopUp: React.Dispatch<React.SetStateAction<boolean>>;
   popUp: boolean;
+  setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const Popup: React.FC<Props> = ({ setPopUp, popUp }) => {
+export const Popup: React.FC<Props> = ({ setPopUp, popUp, setIsActive }) => {
   return (
     <Container style={{ display: popUp ? "none" : "blok" }}>
       <ButtonContainer>
-        <button>ZASADY</button>
-
-        <button onClick={() => setPopUp(!popUp)}>ZACZYNAMY</button>
+        <button
+          onClick={() => {
+            setPopUp(!popUp);
+            setIsActive((old) => !old);
+          }}
+        >
+          ZACZYNAMY
+        </button>
       </ButtonContainer>
       <TextArea>
         <h1>ZASADY GRY</h1>
@@ -62,9 +68,19 @@ export const Popup: React.FC<Props> = ({ setPopUp, popUp }) => {
           Co losowy okres czasu przychodzi klient i kupuje losowo wybraną ilość
           ciastek
         </p>
+        <p>
+          Cena ciasteczka to 5$, jeżeli sprzedajemy na raz więcej jak 5
+          ciasteczek, to cena wynosi 4$
+        </p>
         <p>Za zarobione $$$ możemy kupić mąkę</p>
         <p>Gdy już mamy świeżą mąkę to możemy lepić kule ....</p>
         <p>Miłej zabawy!</p>
+        <p>
+          Po jednym punkcie dostajemy za: ulepienie kuli ciasta, ulepienie
+          ciasteczka, włożenie ciasteczka do piekarnika oraz wyjęcie gotowego
+          ciasteczka. Za każdą sprzedaż dostajemy tyle punktów ile zarobiliśmy
+          $. Zakup mąki to 10 punktów.{" "}
+        </p>
       </TextArea>
     </Container>
   );
