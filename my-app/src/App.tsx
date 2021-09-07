@@ -79,6 +79,7 @@ function App() {
   const [secounds, setSecounds] = useState<number>(0);
   const [isActiveTimer, setIsActiveTimer] = useState<boolean>(false);
   const [endPopUp, setEndPopUp] = useState<boolean>(false);
+  const [timerInOven, setTimerInOven] = useState<number>(0);
 
   const ClearAll = () => {
     setFlourAmount(100);
@@ -123,28 +124,15 @@ function App() {
     return () => clearInterval(myInterval);
   }, [secounds, isActiveTimer]);
 
-  const makeCookie = (doughId: number) => {
-    setScore((score) => score + 1);
-
-    setDoughtArray((old) =>
-      old
-        .map((dough) =>
-          dough.id !== doughId ? dough : { ...dough, size: dough.size - 10 }
-        )
-        .filter((dough) => dough.size > 0)
-    );
-    setRawCookie((old) => old + 1);
-  };
-
-  const cookiesBakingStart = () => {
-    setRawCookie((rawCookie) => rawCookie - 1);
-    setScore((score) => score + 1);
-
-    setCookiesInOvenArray((cookiesInOvenArray) => [
-      ...cookiesInOvenArray,
-      { id: Date.now(), color: "yellow", place: "oven" },
-    ]);
-  };
+  useEffect(() => {
+    let myInterval = setInterval(() => {
+      if (!isActiveTimer) {
+        return;
+      }
+      setTimerInOven((timerInOven) => timerInOven + 1);
+    }, 200);
+    return () => clearInterval(myInterval);
+  }, [timerInOven, isActiveTimer]);
 
   useEffect(() => {
     if (flourAmount < 10 || doughtArray.length === 5) {
@@ -175,6 +163,28 @@ function App() {
     };
   }, [progresDought, isMakingDought, doughtArray, flourAmount]);
 
+  const makeCookie = (doughId: number) => {
+    setScore((score) => score + 1);
+
+    setDoughtArray((old) =>
+      old
+        .map((dough) =>
+          dough.id !== doughId ? dough : { ...dough, size: dough.size - 10 }
+        )
+        .filter((dough) => dough.size > 0)
+    );
+    setRawCookie((old) => old + 1);
+  };
+  const cookiesBakingStart = () => {
+    setRawCookie((rawCookie) => rawCookie - 1);
+    setScore((score) => score + 1);
+
+    setCookiesInOvenArray((cookiesInOvenArray) => [
+      ...cookiesInOvenArray,
+      { id: Date.now(), color: "yellow", place: "oven" },
+    ]);
+  };
+
   useEffect(() => {
     const date = Date.now();
     if (cookiesInOvenArray.length === 0) {
@@ -183,26 +193,27 @@ function App() {
     }
 
     setCookiesInOvenArray((old) =>
-      old.map((cookie) =>
-        date - cookie.id > 3000 ? { ...cookie, color: "orange" } : cookie
-      )
-    );
-    setCookiesInOvenArray((old) =>
-      old.map((cookie) =>
-        date - cookie.id > 6000 ? { ...cookie, color: "brown" } : cookie
-      )
-    );
-    setCookiesInOvenArray((old) =>
-      old.map((cookie) =>
-        date - cookie.id > 9000 ? { ...cookie, color: "black" } : cookie
-      )
-    );
-    setCookiesInOvenArray((old) =>
-      old.filter((cookie) => date - cookie.id < 12000)
+      old
+        .map((cookie): Cookie => {
+          if (date - cookie.id >= 3000 && date - cookie.id < 6000) {
+            return { ...cookie, color: "orange" };
+          }
+
+          if (date - cookie.id >= 6000 && date - cookie.id < 9000) {
+            return { ...cookie, color: "brown" };
+          }
+
+          if (date - cookie.id >= 9000 && date - cookie.id < 12000) {
+            return { ...cookie, color: "black" };
+          }
+
+          return cookie;
+        })
+        .filter((cookie) => date - cookie.id < 12000)
     );
 
     setFreeSpaceInOven(9 - cookiesInOvenArray.length);
-  }, [cookiesInOvenArray]);
+  }, [timerInOven]);
 
   const randomAmount = () => {
     let number = Math.floor(Math.random() * 10 + 1);
@@ -262,23 +273,6 @@ function App() {
       };
     }
   }, [sell, endPopUp]);
-
-  const refillOvenWithCookies = () => {
-    if (rawCookie <= freeSpaceInOven) {
-      let b = rawCookie;
-      for (let i = 0; i < b; i++) {
-        cookiesBakingStart();
-      }
-      return;
-    }
-    if (rawCookie > freeSpaceInOven) {
-      let c = freeSpaceInOven;
-      for (let i = 0; i < c; i++) {
-        cookiesBakingStart();
-      }
-      return;
-    }
-  };
 
   return (
     <>
@@ -382,20 +376,6 @@ function App() {
               }}
             >
               Włóż ciastko do pieca
-            </button>
-            <button
-              disabled={
-                rawCookie < 1
-                  ? true
-                  : false || cookiesInOvenArray.length === 9
-                  ? true
-                  : false
-              }
-              onClick={() => {
-                refillOvenWithCookies();
-              }}
-            >
-              Zapełnij piec
             </button>
 
             <Oven
