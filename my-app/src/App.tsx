@@ -1,5 +1,5 @@
 import { ProgressBar } from "./Components/ProgressBar";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { DisplayAmount } from "./Components/DisplayAmount";
 import { DoughShelf } from "./Components/DoughShelf";
 import { Oven } from "./Components/Oven";
@@ -175,6 +175,7 @@ function App() {
     );
     setRawCookie((old) => old + 1);
   };
+
   const cookiesBakingStart = () => {
     setRawCookie((rawCookie) => rawCookie - 1);
     setScore((score) => score + 1);
@@ -220,8 +221,9 @@ function App() {
     return number;
   };
 
-  const sellCookies = () => {
+  const sellCookies = useCallback(() => {
     let amount = randomAmount();
+    console.log("Sprzedajemy");
     if (cookiesReadyToSell === 0) {
       return;
     }
@@ -247,7 +249,7 @@ function App() {
       }
       return;
     }
-  };
+  }, [sell]);
 
   const randomSecound = () => {
     let number = Math.floor(Math.random() * 4 + 3);
@@ -255,11 +257,12 @@ function App() {
   };
 
   useEffect(() => {
-    if (sell || endPopUp) {
+    if (startPopUp === true) {
       return;
     } else {
       const secounds = randomSecound();
       const timeoutId = window.setTimeout(() => {
+        console.log("Sekubdy", secounds);
         setSell(true);
         sellCookies();
       }, secounds * 1000);
@@ -272,7 +275,7 @@ function App() {
         }
       };
     }
-  }, [sell, endPopUp]);
+  }, [sell, startPopUp]);
 
   return (
     <>
