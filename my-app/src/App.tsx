@@ -192,7 +192,6 @@ function App() {
       setFreeSpaceInOven(9);
       return;
     }
-
     setCookiesInOvenArray((old) =>
       old
         .map((cookie): Cookie => {
@@ -214,7 +213,7 @@ function App() {
     );
 
     setFreeSpaceInOven(9 - cookiesInOvenArray.length);
-  }, [timerInOven]);
+  }, [timerInOven, cookiesInOvenArray.length]);
 
   const randomAmount = () => {
     let number = Math.floor(Math.random() * 10 + 1);
@@ -275,7 +274,7 @@ function App() {
         }
       };
     }
-  }, [sell, startPopUp]);
+  }, [sell, startPopUp, sellCookies]);
 
   return (
     <>
