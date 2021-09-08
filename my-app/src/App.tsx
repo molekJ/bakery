@@ -222,7 +222,6 @@ function App() {
 
   const sellCookies = useCallback(() => {
     let amount = randomAmount();
-    console.log("Sprzedajemy");
     if (cookiesReadyToSell === 0) {
       return;
     }
@@ -261,7 +260,6 @@ function App() {
     } else {
       const secounds = randomSecound();
       const timeoutId = window.setTimeout(() => {
-        console.log("Sekubdy", secounds);
         setSell(true);
         sellCookies();
       }, secounds * 1000);
