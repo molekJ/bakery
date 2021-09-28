@@ -16,6 +16,11 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   margin-top: 20px;
+
+  @media screen and (max-width: 768px) {
+    width: 90%;
+    height: auto;
+  }
 `;
 
 const ButtonContainer = styled.div`

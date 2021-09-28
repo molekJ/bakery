@@ -34,6 +34,9 @@ export const GlobalStyle = createGlobalStyle`
            :active {
                background: var(--capri-dark);
            }
+           @media screen and (max-width: 576px) {
+            width: 100px;
+}
            
         }
 

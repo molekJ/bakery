@@ -16,7 +16,6 @@ const Container = styled.div`
   align-items: center;
   margin: 20px;
   background: var(--yellow-transparent);
-
   border-radius: 20px;
 `;
 
@@ -28,6 +27,22 @@ const HeaderContainer = styled.div`
   flex-shrink: 0;
   flex-direction: column;
   justify-content: center;
+  @media screen and (max-width: 576px) {
+    height: 100%;
+    h1 {
+      font-size: 20px;
+    }
+  }
+`;
+
+const InfoContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: calc(100vw - 40px);
+
+  @media screen and (max-width: 576px) {
+    flex-wrap: wrap;
+  }
 `;
 
 const LeftContainer = styled.div`
@@ -36,6 +51,14 @@ const LeftContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  @media screen and (max-width: 768px) {
+    width: 180px;
+  }
+
+  @media screen and (max-width: 576px) {
+    width: 100px;
+    margin-right: 10px;
+  }
 `;
 
 const CenterContainer = styled.div`
@@ -43,6 +66,15 @@ const CenterContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  @media screen and (max-width: 768px) {
+    width: 400px;
+    height: 400px;
+  }
+
+  @media screen and (max-width: 576px) {
+    width: 200px;
+    height: 200px;
+  }
 `;
 
 const RightContainer = styled.div`
@@ -56,13 +88,13 @@ const MainContainer = styled.div`
   overflow: auto;
   height: calc(100vh - 140px);
   justify-content: center;
+  @media screen and (max-width: 768px) {
+    flex-direction: row;
+    height: 100%;
+    flex-wrap: wrap;
+  }
 `;
 
-const InfoContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: calc(100vw - 40px);
-`;
 function App() {
   const [flourAmount, setFlourAmount] = useState<number>(100);
   const [progresDought, setProgresDought] = useState<number>(0);

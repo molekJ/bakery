@@ -8,6 +8,15 @@ const Container = styled.div`
   background: var(--tinkerbell);
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
+
+  @media screen and (max-width: 768px) {
+    width: 400px;
+    height: 400px;
+  }
+  @media screen and (max-width: 576px) {
+    width: 200px;
+    height: 400px;
+  }
 `;
 
 const CakePlace = styled.div`
@@ -22,6 +31,11 @@ const CakePlace = styled.div`
   justify-self: center;
   align-self: center;
   cursor: pointer;
+
+  @media screen and (max-width: 576px) {
+    height: 80%;
+    width: 90%;
+  }
 `;
 
 interface Props {

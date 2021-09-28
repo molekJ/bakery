@@ -12,6 +12,12 @@ const Container = styled.div`
   border-radius: 5px;
   font-weight: 600;
   letter-spacing: 1px;
+  @media screen and (max-width: 576px) {
+    width: 100px;
+    padding: 10px 0px;
+
+    font-size: 12px;
+  }
 `;
 
 export const DisplayAmount: React.FC<Props> = ({
